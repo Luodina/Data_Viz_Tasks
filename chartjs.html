@@ -1,234 +1,327 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>My Vizualization</title>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    </head>
-    <body>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm">
-                    <div>
-                        <label>Bar Chart</label>
-                        <canvas id="myChart" width="300" height="300"></canvas>
-                    </div> 
-                </div>
-                <div class="col-sm">
-                    <div>
-                        <label>Doughnut Chart</label>
-                        <canvas id="myDoughnutChart" width="300" height="300"></canvas>
-                    </div> 
-                </div>
-                <div class="col-sm">
-                    <div>
-                        <label>Pie Chart</label>
-                        <canvas id="myPieChart" width="300" height="300"></canvas>
-                    </div> 
+
+<head>
+    <title>My Vizualization</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
+</head>
+
+<body>
+    <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+        <h4>Exploratory Data Visualization of Airbnb Dataset in Hong Kong</h4>
+        <a class="navbar-brand" style="float:right" href="./data.html">
+            <img src="./airbnb.png" width="30" height="30" class="d-inline-block align-top" alt="">
+            AirBnB Dataset
+        </a>
+    </nav>
+    <div class="container">
+        <div class="row" style="margin-top:20px">
+            <div class="col-sm">
+                <div>
+                    <label>
+                        <h5>Accommodation Price, HKD</h5>
+                    </label>
+                    <canvas id="myDoughnutChart" width="300" height="300"></canvas>
                 </div>
             </div>
-            <br/>
-            <br/>
-            <div class="row">
-                <div class="col-sm">
-                    <div>
-                        <label>Scatter Chart</label>
-                        <canvas id="myScatterChart" width="300" height="300"></canvas>  
-                    </div> 
+            <div class="col-sm">
+                <div>
+                    <label>
+                        <h5>Type of Accommodation</h5>
+                    </label>
+                    <canvas id="myChart" width="300" height="300"></canvas>
                 </div>
-                <div class="col-sm">
-                    <div>
-                        <label>Radar Chart</label>
-                        <canvas id="myRadarChart" width="300" height="300"></canvas>
-                    </div> 
-                </div>
-                <div class="col-sm">
-                    <div>
-                        <label>Line Chart</label>
-                        <canvas id="myLineChart" width="300" height="300"></canvas>
-                    </div> 
+            </div>
+            <div class="col-sm">
+                <div>
+                    <label>
+                        <h5>Average Price per Night</h5>
+                    </label>
+                    <canvas id="myRadarChart" width="300" height="300"></canvas>
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-7">
+                <div>
+                    <label>
+                        <h5>Neighbourhood</h5>
+                    </label>
+                    <canvas id="myLineChart" width="600" height="300"></canvas>
+                </div>
+            </div>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-4">
+                <div>
+                    <label>
+                        <h5>Type of the Most Expensive Accommodation</h5>
+                    </label>
+                    <canvas id="myPieChart" width="300" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="listings.json"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script>
+    let airbnbData = listings;
+    let bar_labels = ["Private room", "Entire home/apt", "Shared room"];
+    let bar_private = 0, bar_entire = 0, bar_shared = 0;
+    let doughnut_labels = ["< 500HKD",
+        "500HKD-1000HKD",
+        "1000HKD-2000HKD",
+        "2000HKD-4000HKD",
+        ">4000HKD"];
+    let doughnut_priceLt500 = 0,
+        doughnut_priceLt1000 = 0,
+        doughnut_priceLt2000 = 0,
+        doughnut_priceLt4000 = 0,
+        doughnut_priceGt3999 = 0;
+    let radar_avg_private_price = 0,
+        radar_avg_entire_price = 0,
+        radar_avg_shared_price = 0;
+    let radar_shared_price = 0, radar_entire_price = 0, radar_private_price = 0;
+    let neighbourhood = { private: {}, entire: {}, shared: {} };
+    let pie_dataset = {};
+    for (i = 0; i < listings.length; i++) {
+        let item = listings[i];
 
-        
-    </body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-    <script>
-        var ctx = document.getElementById('myChart').getContext('2d');
-        console.log("ctx",ctx)
-        ctx.canvas.parentNode.style.height = '330px';
-        ctx.canvas.parentNode.style.width = '300px';
-        const data = {
-              labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-              datasets: [{
-                  label: '# of Votes',
-                  data: [12, 19, 3, 5, 2, 3],
-                  backgroundColor: [
-                      'rgba(255, 99, 132, 0.2)',
-                      'rgba(54, 162, 235, 0.2)',
-                      'rgba(255, 206, 86, 0.2)',
-                      'rgba(75, 192, 192, 0.2)',
-                      'rgba(153, 102, 255, 0.2)',
-                      'rgba(255, 159, 64, 0.2)'
-                  ],
-                  borderColor: [
-                      'rgba(255, 99, 132, 1)',
-                      'rgba(54, 162, 235, 1)',
-                      'rgba(255, 206, 86, 1)',
-                      'rgba(75, 192, 192, 1)',
-                      'rgba(153, 102, 255, 1)',
-                      'rgba(255, 159, 64, 1)'
-                  ],
-                  borderWidth: 1
-              }]
-          };
-        var myChart = new Chart(ctx, {
-          type: 'bar',
-          data: data,
-          options: {
-              scales: {
-                  yAxes: [{
-                      ticks: {
-                          beginAtZero: true
-                      }
-                  }]
-              }
-          }
-        });
+        // get data Bar chart & Radar Chart
+        if (item["room_type"] === "Private room") {
+            bar_private++;
+            radar_private_price = radar_private_price + item["price"];
+            if (neighbourhood.private[item["neighbourhood"]]) {
+                neighbourhood.private[item["neighbourhood"]] = neighbourhood.private[item["neighbourhood"]] + 1;
+            } else {
+                neighbourhood.private[item["neighbourhood"]] = 1;
+            }
+        } else if (item["room_type"] === "Entire home/apt") {
+            bar_entire++;
+            radar_entire_price = radar_entire_price + item["price"];
+            if (neighbourhood.entire[item["neighbourhood"]]) {
+                neighbourhood.entire[item["neighbourhood"]] = neighbourhood.entire[item["neighbourhood"]] + 1;
+            } else {
+                neighbourhood.entire[item["neighbourhood"]] = 1;
+            }
+        } else if (item["room_type"] === "Shared room") {
+            bar_shared++
+            radar_shared_price = radar_shared_price + item["price"];
+            if (neighbourhood.shared[item["neighbourhood"]]) {
+                neighbourhood.shared[item["neighbourhood"]] = neighbourhood.shared[item["neighbourhood"]] + 1;
+            } else {
+                neighbourhood.shared[item["neighbourhood"]] = 1;
+            }
+        }
 
-        // And for a doughnut chart
-        var ctx1 = document.getElementById('myDoughnutChart').getContext('2d');
-        ctx1.canvas.parentNode.style.height = '330px';
-        ctx1.canvas.parentNode.style.width = '300px';
-        var myDoughnutChart = new Chart(ctx1, {
-            type: 'doughnut',
-            data: data,
-            //options: options
-        });
+        // get data for Doughnut Chart
+        if (item["price"] < 500) {
+            doughnut_priceLt500++
+        } else if (item["price"] < 1000) {
+            doughnut_priceLt1000++
+        } else if (item["price"] < 2000) {
+            doughnut_priceLt2000++
+        } else if (item["price"] < 4000) {
+            doughnut_priceLt4000++
+        } else if (item["price"] > 3999) {
+            doughnut_priceGt3999++;
+            if (pie_dataset[item["room_type"]]) {
+                pie_dataset[item["room_type"]] = pie_dataset[item["room_type"]] + 1;
+            } else {
+                pie_dataset[item["room_type"]] = 1;
+            }
+        }
+    };
 
-        // For a pie chart
-        var ctx2 = document.getElementById('myPieChart').getContext('2d');
-        ctx2.canvas.parentNode.style.height = '330px';
-        ctx2.canvas.parentNode.style.width = '300px';
-        var myPieChart = new Chart(ctx2, {
-            type: 'pie',
-            data: data,
-            //options: options
-        });
+    // get data for Line Chart
+    let line_private = [], line_entire = [], line_shared = [];
+    let line_labels = Object.keys(neighbourhood.entire)
+    for (i = 0; i < line_labels.length; i++) {
+        let distr = line_labels[i]
+        line_private.push(neighbourhood.private[distr] ? neighbourhood.private[distr] : 0);
+        line_entire.push(neighbourhood.entire[distr] ? neighbourhood.entire[distr] : 0);
+        line_shared.push(neighbourhood.shared[distr] ? neighbourhood.shared[distr] : 0);
+    }
 
-        // For a Scatter chart
-        var ctx3= document.getElementById('myScatterChart').getContext('2d');
-        ctx3.canvas.parentNode.style.height = '330px';
-        ctx3.canvas.parentNode.style.width = '300px';
-        var myScatterChart = new Chart(ctx3, {
-            type: 'scatter',
-            data: {
-                datasets: [{
-                    label: 'Scatter Dataset 1',
-                    backgroundColor: ['rgba(255, 99, 132, 0.2)'],
-                    data: [{
-                        x: -10,
-                        y: 0
-                    }, {
-                        x: 0,
-                        y: 10
-                    }, {
-                        x: 10,
-                        y: 5
-                    }]
-                },{
-                    label: 'Scatter Dataset 2',
-                    backgroundColor: ['rgba(255, 206, 86, 1)'],
-                    data: [{
-                        x: 10,
-                        y: 5
-                    }, {
-                        x: 0,
-                        y: 10
-                    }, {
-                        x: -10,
-                        y: 5
-                    }]
+    // get data for Radar Chart
+    radar_avg_private_price = radar_private_price / bar_private;
+    radar_avg_entire_price = radar_entire_price / bar_entire;
+    radar_avg_shared_price = radar_shared_price / bar_shared;
+
+    const doughnut_data = {
+        labels: doughnut_labels,
+        datasets: [{
+            label: ['# of Places'],
+            data: [doughnut_priceLt500,
+                doughnut_priceLt1000,
+                doughnut_priceLt2000,
+                doughnut_priceLt4000,
+                doughnut_priceGt3999],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 206, 86, 1)',
+            ],
+            borderWidth: 1
+        }]
+    };
+    const bar_data = {
+        labels: bar_labels,
+        datasets: [{
+            label: ['# of Places'],
+            data: [bar_private, bar_entire, bar_shared],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+            ],
+            borderWidth: 1
+        }]
+    };
+    const radar_data = {
+        labels: bar_labels,
+        datasets: [{
+            label: 'AVG Price for Accomodation',//['# of Votes'],
+            data: [radar_avg_private_price, radar_avg_entire_price, radar_avg_shared_price],
+            backgroundColor: [
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ]
+        }]
+    };
+    const line_data = {
+        datasets: [{
+            label: 'Private Room',
+            data: line_private,
+            backgroundColor: ['rgba(255, 99, 132, 0.2)'],
+            borderColor: ['rgba(255, 99, 132, 1)'],
+        },
+        {
+            label: 'Entire Appartment',
+            data: line_entire,
+            backgroundColor: ['rgba(54, 162, 235, 0.2)'],
+            borderColor: ['rgba(54, 162, 235, 1)'],
+        },
+        {
+            label: 'Shared Room',
+            data: line_shared,
+            backgroundColor: ['rgba(255, 206, 86, 0.2)'],
+            borderColor: ['rgba(255, 206, 86, 1)'],
+        }],
+        labels: line_labels
+    };
+    const pie_data = {
+        labels: bar_labels,
+        datasets: [{
+            label: ['# of Votes', '# of Votes', '# of Votes'],
+            data: [pie_dataset[bar_labels[0]], pie_dataset[bar_labels[1]], pie_dataset[bar_labels[2]]],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    // For a bar chart
+    let ctx = document.getElementById('myChart').getContext('2d');
+    ctx.canvas.parentNode.style.height = '400px';
+    ctx.canvas.parentNode.style.width = '300px';
+    let myChart = new Chart(ctx, {
+        type: 'bar',
+        data: bar_data,
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
                 }]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        type: 'linear',
-                        position: 'bottom'
-                    }]
+            }
+        }
+    });
+
+    // For a doughnut chart
+    let ctx1 = document.getElementById('myDoughnutChart').getContext('2d');
+    ctx1.canvas.parentNode.style.height = '330px';
+    ctx1.canvas.parentNode.style.width = '300px';
+    let myDoughnutChart = new Chart(ctx1, {
+        type: 'doughnut',
+        data: doughnut_data
+    });
+
+    // For a pie chart
+    let ctx2 = document.getElementById('myPieChart').getContext('2d');
+    ctx2.canvas.parentNode.style.height = '330px';
+    ctx2.canvas.parentNode.style.width = '300px';
+    let myPieChart = new Chart(ctx2, {
+        type: 'pie',
+        data: pie_data,
+    });
+
+    // For a radar chart
+    let ctx4 = document.getElementById('myRadarChart').getContext('2d');
+    ctx4.canvas.parentNode.style.height = '330px';
+    ctx4.canvas.parentNode.style.width = '300px';
+    let myRadarChart = new Chart(ctx4, {
+        labels: bar_labels,
+        type: 'radar',
+        data: radar_data,
+        options: {
+            scale: {
+                ticks: {
+                    suggestedMin: 50,
+                    suggestedMax: 100//Math.max([radar_avg_private_price, radar_avg_entire_price, radar_avg_shared_price])
                 }
             }
-        });
+        }
+    });
 
-        // For a pie chart
-        var ctx4= document.getElementById('myRadarChart').getContext('2d');
-        ctx4.canvas.parentNode.style.height = '330px';
-        ctx4.canvas.parentNode.style.width = '300px';
-        var myRadarChart = new Chart(ctx4, {
-            labels: ['Red', 'Blue', 'Yellow', 'Green'],
-            type: 'radar',
-            data: {
-                datasets: [{
-                    label: 'First dataset',
-                    data: [0, 20, 40, 50],
-                    backgroundColor: [
-                      'rgba(255, 99, 132, 0.2)',
-                      'rgba(54, 162, 235, 0.2)',
-                      'rgba(255, 206, 86, 0.2)',
-                      'rgba(75, 192, 192, 0.2)',
-                  ],
-                  borderColor: [
-                      'rgba(255, 99, 132, 1)',
-                      'rgba(54, 162, 235, 1)',
-                      'rgba(255, 206, 86, 1)',
-                      'rgba(75, 192, 192, 1)',
-                  ],
-                }],
-                labels: ['January', 'February', 'March', 'April']
-            },
-            options: {
-                scale: {
+    // For a line chart
+    let ctx5 = document.getElementById('myLineChart').getContext('2d');
+    ctx5.canvas.parentNode.style.height = '400px';
+    ctx5.canvas.parentNode.style.width = '750px';
+    let myLineChart = new Chart(ctx5, {
+        type: 'line',
+        data: line_data,
+        options: {
+            scales: {
+                yAxes: [{
                     ticks: {
                         suggestedMin: 50,
                         suggestedMax: 100
                     }
-                }
+                }]
             }
-        });
+        }
+    });
+</script>
 
-        // For a pie chart
-        var ctx5= document.getElementById('myLineChart').getContext('2d');
-        ctx5.canvas.parentNode.style.height = '330px';
-        ctx5.canvas.parentNode.style.width = '300px';
-        let myLineChart = new Chart(ctx5, {
-            type: 'line',
-            data: {
-                datasets: [{
-                                label: 'First dataset',
-                                data: [0, 20, 40, 50],
-                                backgroundColor: ['rgba(75, 192, 192, 0.2)'],
-                                borderColor: ['rgba(75, 192, 192, 1)'],
-                            },
-                            {
-                                label: 'Second dataset',
-                                data: [50, 40, 20, 0],
-                                backgroundColor: ['rgba(255, 99, 132, 0.2)'],
-                                borderColor: ['rgba(255, 99, 132, 1)'],
-                            }],
-                labels: ['January', 'February', 'March', 'April']
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            suggestedMin: 50,
-                            suggestedMax: 100
-                        }
-                    }]
-                }
-            }
-        });
-    </script>
 </html>
-
