@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>My First Dashboard</title>
+		<!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" rel="stylesheet">
+	</head>
+	<body>
+		<nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+            <h4>Exploratory Data Visualization of Airbnb Dataset in Hong Kong</h4>
+            <a class="navbar-brand" style="float:right" href="http://insideairbnb.com/get-the-data.html">
+                <img src="./airbnb.png" width="30" height="30" class="d-inline-block align-top" alt="">
+                AirBnB Dataset
+            </a>
+        </nav>
+		<div class="container">
+		  <div class="row">
+		    <div class="col">
+                <label>
+                    <h5>Accommodation Price, HKD</h5>
+                </label>
+	           <canvas id="doughnutChart" width="300" height="300"></canvas>
+		    </div>
+		    <div class="col">
+                <label>
+                    <h5>Type of Accommodation</h5>
+                </label>
+		        <canvas id="barChart" width="300" height="300"></canvas>
+		    </div>
+            <div class="col">
+                <label>
+                    <h5>Average Price per Night</h5>
+                </label>
+              <canvas id="radarChart" width="300" height="300"></canvas>
+            </div>
+		  </div>
+		  <div class="row">
+		    <div class="col-sm-7">
+                <div>
+                    <label>
+                        <h5>Neighbourhood</h5>
+                    </label>
+                    <canvas id="lineChart" width="600" height="300"></canvas>
+                </div>
+            </div>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-4">
+                <div>
+                    <label>
+                        <h5>Type of the Most Expensive Accommodation</h5>
+                    </label>
+                    <canvas id="pieChart" width="300" height="300"></canvas>
+                </div>
+		    </div>
+		  </div>
+		</div>
+	</body>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js" ></script>
+    <script type="text/javascript" src="./listings.json"></script>
+    <script type="text/javascript" src="./bar.js"></script>
+    <script type="text/javascript" src="./doughnut.js"></script>
+    <script type="text/javascript" src="./radar.js"></script>
+    <script type="text/javascript" src="./line.js"></script>
+    <script type="text/javascript" src="./pie.js"></script>
+</html>
