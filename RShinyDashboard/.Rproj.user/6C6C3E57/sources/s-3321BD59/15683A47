@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1563540151020.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "15683A47",
+    "lastKnownWriteTime" : 1563554801,
+    "last_content_update" : 1563554801606,
+    "path" : "~/Desktop/University_Sunderland/projects/RShinyDashboard/app.R",
+    "project_path" : "app.R",
+    "properties" : {
+        "cursorPosition" : "7,17",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
